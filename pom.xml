@@ -59,6 +59,7 @@
 		<!-- A Guide to Maven Encoding https://www.baeldung.com/maven-encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<maven.deploy.skip>true</maven.deploy.skip>
 
 		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
@@ -73,6 +74,7 @@
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.3</junit5.version>
 		<kotest.version>5.6.2</kotest.version>
+		<argLine/>
 	</properties>
 
 	<dependencies>
@@ -298,6 +300,18 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>properties</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -406,6 +420,11 @@
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>0.8.10</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.6.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

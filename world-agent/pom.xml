@@ -9,4 +9,65 @@
 	</parent>
 
 	<artifactId>world-agent</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Premain-Class>io.foldright.study.world.agent.WorldAgent</Premain-Class>
+							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
+							<Can-Redefine-Classes>false</Can-Redefine-Classes>
+							<Can-Retransform-Classes>true</Can-Retransform-Classes>
+							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>shade-when-package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<relocations>
+								<relocation>
+									<pattern>javassist</pattern>
+									<shadedPattern>io.foldright.study.world.agent.internal.javassist</shadedPattern>
+								</relocation>
+							</relocations>
+							<artifactSet>
+								<includes>
+									<include>org.javassist:javassist</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>org.javassist:javassist</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -9,4 +9,36 @@
 	</parent>
 
 	<artifactId>main-runner</artifactId>
+
+	<properties>
+		<agent.opt.hello>-javaagent:${io.foldright.study:hello-agent:jar}</agent.opt.hello>
+		<agent.opt.world>-javaagent:${io.foldright.study:world-agent:jar}</agent.opt.world>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.foldright.study</groupId>
+			<artifactId>hello-agent</artifactId>
+			<version>${project.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>io.foldright.study</groupId>
+			<artifactId>world-agent</artifactId>
+			<version>${project.version}</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>@{argLine} ${agent.opt.hello} ${agent.opt.world}</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

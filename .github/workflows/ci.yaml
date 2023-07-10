@@ -34,7 +34,7 @@ jobs:
           java-version: 8
           distribution: zulu
       - name: test with Java 8
-        run: ./mvnw -V --no-transfer-progress surefire:test
+        run: ./mvnw -V --no-transfer-progress dependency:properties surefire:test
 
       - name: 'remove self maven install files(OS: *nix)'
         run: rm -rf $HOME/.m2/repository/io/foldright/study*

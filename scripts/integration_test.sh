@@ -66,8 +66,8 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   # about CI env var
   #   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
   if [ "${CI:-}" = true ]; then
-    jvb::mvn_cmd jacoco:prepare-agent surefire:test jacoco:report
+    jvb::mvn_cmd jacoco:prepare-agent dependency:properties surefire:test jacoco:report
   else
-    jvb::mvn_cmd surefire:test
+    jvb::mvn_cmd dependency:properties surefire:test
   fi
 done

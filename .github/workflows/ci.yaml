@@ -1,0 +1,46 @@
+# Quickstart for GitHub Actions
+# https://docs.github.com/en/actions/quickstart
+
+name: Fast CI
+on: [ push, pull_request, workflow_dispatch ]
+jobs:
+  test:
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    name: fast test on OS ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+      fail-fast: false
+      max-parallel: 64
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+          # only first java setup need enable cache
+          cache: maven
+      - name: build and test with Java 17
+        run: ./mvnw -V --no-transfer-progress clean install
+
+      - name: setup Java 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: zulu
+      - name: test with Java 8
+        run: ./mvnw -V --no-transfer-progress surefire:test
+
+      - name: 'remove self maven install files(OS: *nix)'
+        run: rm -rf $HOME/.m2/repository/io/foldright/study*
+        # https://docs.github.com/en/actions/learn-github-actions/expressions
+        # https://docs.github.com/en/actions/learn-github-actions/variables#detecting-the-operating-system
+        if: runner.os != 'Windows'
+      - name: 'remove self maven install files(OS: Windows)'
+        run: Remove-Item -Recurse -Force $home/.m2/repository/io/foldright/study*
+        if: runner.os == 'Windows'

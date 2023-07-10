@@ -1,0 +1,521 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>io.foldright.study</groupId>
+	<artifactId>java-agent-study</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
+	<description>java agent study parent</description>
+	<url>https://github.com/foldright/java-agent-study</url>
+	<inceptionYear>2023</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:foldright/java-agent-study.git</connection>
+		<developerConnection>scm:git:git@github.com:foldright/java-agent-study.git</developerConnection>
+		<url>https://github.com/foldright/java-agent-study</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/foldright/java-agent-study/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<organization>
+		<name>FoldRight</name>
+		<url>https://foldright.io</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Jerry Lee</name>
+			<id>oldratlee</id>
+			<email>oldratlee(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/oldratlee</url>
+			<organization>FoldRight</organization>
+			<organizationUrl>https://foldright.io</organizationUrl>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>hello-agent</module>
+		<module>world-agent</module>
+		<module>main-runner</module>
+	</modules>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+		<!-- A Guide to Maven Encoding https://www.baeldung.com/maven-encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+		<maven.deploy.skip>true</maven.deploy.skip>
+
+		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
+		<jsr305.version>3.0.2</jsr305.version>
+		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
+
+		<kotlin.version>1.9.0</kotlin.version>
+		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
+
+		<slf4j.version>2.0.7</slf4j.version>
+
+		<!-- testing dependencies versions -->
+		<junit5.version>5.9.3</junit5.version>
+		<kotest.version>5.6.2</kotest.version>
+	</properties>
+
+	<dependencies>
+		<!-- QA libs -->
+		<dependency>
+			<groupId>com.github.spotbugs</groupId>
+			<artifactId>spotbugs-annotations</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- logging libs -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.github.microutils</groupId>
+			<artifactId>kotlin-logging-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- testing libs -->
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit5-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-assertions-core-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-property-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- bom -->
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!--
+				QA libs
+				make qa libs optional, smaller deployment
+			-->
+			<dependency>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-annotations</artifactId>
+				<version>${spotbugs.annotations.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${jsr305.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
+				<groupId>org.jetbrains</groupId>
+				<artifactId>annotations</artifactId>
+				<version>${jetbrains.annotations.version}</version>
+				<optional>true</optional>
+			</dependency>
+
+			<!-- implementation dependencies -->
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>3.29.2-GA</version>
+				<optional>true</optional>
+			</dependency>
+
+			<!-- logging libs -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.github.microutils</groupId>
+				<artifactId>kotlin-logging-jvm</artifactId>
+				<version>3.0.5</version>
+			</dependency>
+
+			<!--
+				testing libs
+			-->
+			<!-- https://github.com/kotlintest/kotlintest -->
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-runner-junit5-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-assertions-core-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-property-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<!--
+					Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
+						https://kotlinlang.org/docs/maven.html#compile-kotlin-and-java-sources
+					Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
+				-->
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<!-- Replacing default-compile as it is treated specially by Maven -->
+					<execution>
+						<id>default-compile</id>
+						<phase>none</phase>
+					</execution>
+					<!-- Replacing default-testCompile as it is treated specially by Maven -->
+					<execution>
+						<id>default-testCompile</id>
+						<phase>none</phase>
+					</execution>
+					<execution>
+						<id>java-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>java-test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
+				add maven-enforce-plugin to make sure the right jdk is used
+					https://stackoverflow.com/a/18420462/922688
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>8</version>
+								</requireJavaVersion>
+								<requireMavenVersion>
+									<version>3.3.9</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jetbrains.kotlin</groupId>
+					<artifactId>kotlin-maven-plugin</artifactId>
+					<version>${kotlin.version}</version>
+					<configuration>
+						<args>
+							<arg>-Werror</arg>
+							<arg>-Xjvm-default=all</arg>
+							<arg>-Xjsr305=warn</arg>
+						</args>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.11.0</version>
+					<configuration>
+						<!-- https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#compilerArgs -->
+						<compilerArgs>
+							<arg>-Xlint:unchecked</arg>
+							<arg>-J-Duser.language=en_us</arg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<!-- https://github.com/moditect/moditect -->
+					<groupId>org.moditect</groupId>
+					<artifactId>moditect-maven-plugin</artifactId>
+					<version>1.0.0.Final</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.5.0</version>
+					<configuration>
+						<shadeSourcesContent>true</shadeSourcesContent>
+						<dependencyReducedPomLocation>
+							${project.build.directory}/dependency-reduced-pom.xml
+						</dependencyReducedPomLocation>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.5.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.12.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>4.7.3.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.10</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<profiles>
+		<profile>
+			<id>enable-add-module-infos</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- https://github.com/moditect/moditect -->
+						<groupId>org.moditect</groupId>
+						<artifactId>moditect-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>add-module-infos</id>
+								<phase>package</phase>
+								<goals>
+									<goal>add-module-info</goal>
+								</goals>
+								<configuration>
+									<jvmVersion>9</jvmVersion>
+									<overwriteExistingFiles>true</overwriteExistingFiles>
+									<module>
+										<!-- using `moduleInfoFile` is more IDE/editor friendly than `moduleInfoSource`/`moduleInfo` -->
+										<moduleInfoFile>${project.basedir}/src/main/moditect/module-info.java</moduleInfoFile>
+									</module>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>lint</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<!--
+							https://spotbugs.github.io/
+							https://spotbugs.readthedocs.io/en/latest/introduction.html
+							https://spotbugs.readthedocs.io/en/latest/maven.html
+							https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html
+								Binds by default to the lifecycle phase: verify.
+							Spotbugs support @SuppressWarnings
+								https://github.com/spotbugs/spotbugs/issues/737#issuecomment-416118033
+							Is it possible for spotbugs to skip kotlin files from pure maven configuration?
+								https://stackoverflow.com/questions/55060459
+						-->
+						<groupId>com.github.spotbugs</groupId>
+						<artifactId>spotbugs-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>gen-code-cov</id>
+			<activation>
+				<property>
+					<!-- https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables -->
+					<name>env.CI</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<!--
+							for codecov.io
+							config example: https://github.com/codecov/example-java
+							plugin docs: https://eclemma.org/jacoco/trunk/doc/
+						-->
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<!-- https://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html -->
+								<configuration>
+									<append>true</append>
+								</configuration>
+							</execution>
+							<execution>
+								<id>report</id>
+								<phase>test</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

@@ -11,8 +11,12 @@
 	<artifactId>main-runner</artifactId>
 
 	<properties>
+		<exec.mainClass>io.foldright.study.main.Main</exec.mainClass>
+
 		<agent.opt.hello>-javaagent:${io.foldright.study:hello-agent:jar}</agent.opt.hello>
+		<dopt.enable.agent.hello>-Denable.hello.agent=true</dopt.enable.agent.hello>
 		<agent.opt.world>-javaagent:${io.foldright.study:world-agent:jar}</agent.opt.world>
+		<dopt.enable.agent.world>-Denable.world.agent=true</dopt.enable.agent.world>
 	</properties>
 
 	<dependencies>
@@ -33,12 +37,66 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
 				<configuration>
-					<argLine>@{argLine} ${agent.opt.hello} ${agent.opt.world}</argLine>
+					<executable>${java.home}/bin/java</executable>
+					<arguments>
+						<argument>-Xms256m</argument>
+						<argument>-ea</argument>
+						<argument>-Duser.language=en</argument>
+						<argument>-Duser.country=US</argument>
+
+						<argument>-classpath</argument>
+						<classpath/>
+
+						<argument>${exec.mainClass}</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- agent config mode profiles -->
+		<profile>
+			<id>enable-hello-world-agents</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<argLine>@{argLine}
+								${agent.opt.hello} ${dopt.enable.agent.hello}
+								${agent.opt.world} ${dopt.enable.agent.world}
+							</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<configuration>
+							<arguments>
+								<argument>-Xms256m</argument>
+								<argument>-ea</argument>
+								<argument>-Duser.language=en</argument>
+								<argument>-Duser.country=US</argument>
+
+								<argument>${agent.opt.hello}</argument>
+								<argument>${dopt.enable.agent.hello}</argument>
+								<argument>${agent.opt.world}</argument>
+								<argument>${dopt.enable.agent.world}</argument>
+
+								<argument>-classpath</argument>
+								<classpath/>
+
+								<argument>${exec.mainClass}</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

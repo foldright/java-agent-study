@@ -10,7 +10,16 @@
 
 	<artifactId>world-agent</artifactId>
 
+	<properties>
+		<project.root.package>io.foldright.study.world.agent</project.root.package>
+	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>io.foldright.study</groupId>
+			<artifactId>utils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
@@ -25,10 +34,10 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Premain-Class>io.foldright.study.world.agent.WorldAgent</Premain-Class>
+							<Premain-Class>${project.root.package}.WorldAgent</Premain-Class>
 							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
-							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
+							<Can-Redefine-Classes>true</Can-Redefine-Classes>
 							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
 						</manifestEntries>
 					</archive>
@@ -47,16 +56,27 @@
 						<configuration>
 							<relocations>
 								<relocation>
+									<pattern>io.foldright.study.agent.utils</pattern>
+									<shadedPattern>${project.root.package}.internal.utils</shadedPattern>
+								</relocation>
+								<relocation>
 									<pattern>javassist</pattern>
-									<shadedPattern>io.foldright.study.world.agent.internal.javassist</shadedPattern>
+									<shadedPattern>${project.root.package}.internal.javassist</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>
 								<includes>
+									<include>io.foldright.study:utils</include>
 									<include>org.javassist:javassist</include>
 								</includes>
 							</artifactSet>
 							<filters>
+								<filter>
+									<artifact>io.foldright.study:utils</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
 								<filter>
 									<artifact>org.javassist:javassist</artifact>
 									<excludes>

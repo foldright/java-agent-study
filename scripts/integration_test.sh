@@ -52,10 +52,14 @@ jvb::mvn_cmd clean install
 # test by multiply version jdks
 ########################################
 
-for jdk_version in "${JDK_VERSIONS[@]}"; do
-  # skip default jdk, already tested above
-  [ "$jdk_version" = "$default_build_jdk_version" ] && continue
+# about CI env var
+#   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+if [ "${CI:-}" = true ]; then
+  CI_MORE_BEGIN_OPTS=jacoco:prepare-agent
+  CI_MORE_END_OPTS=jacoco:report
+fi
 
+for jdk_version in "${JDK_VERSIONS[@]}"; do
   jh_var_name="JAVA${jdk_version}_HOME"
   [ -d "${!jh_var_name:-}" ] || cu::die "\$${jh_var_name}(${!jh_var_name:-}) dir is not existed!"
   export JAVA_HOME="${!jh_var_name}"
@@ -63,11 +67,25 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   # just test without build
   cu::head_line_echo "test with Java $jdk_version: $JAVA_HOME"
 
-  # about CI env var
-  #   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-  if [ "${CI:-}" = true ]; then
-    jvb::mvn_cmd jacoco:prepare-agent dependency:properties surefire:test jacoco:report
-  else
-    jvb::mvn_cmd dependency:properties surefire:test
+  # skip default jdk, already tested above
+  if [ "$jdk_version" != "$default_build_jdk_version" ]; then
+    # just test without build
+    cu::head_line_echo "test without agents: $JAVA_HOME"
+    jvb::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
   fi
+
+  cu::head_line_echo test under hello and world agents
+  STUDY_AGENT_RUN_MODE=hello-and-world-agents jvb::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+
+  cu::head_line_echo test under hello agent
+  STUDY_AGENT_RUN_MODE=only-hello-agent jvb::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+
+  cu::head_line_echo run Main without agents
+  jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
+
+  cu::head_line_echo run Main under hello and world agents
+  STUDY_AGENT_RUN_MODE=hello-and-world-agents jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
+
+  cu::head_line_echo run Main under hello agent
+  STUDY_AGENT_RUN_MODE=only-hello-agent jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
 done

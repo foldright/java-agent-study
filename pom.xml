@@ -48,6 +48,7 @@
 	</developers>
 
 	<modules>
+		<module>utils</module>
 		<module>hello-agent</module>
 		<module>world-agent</module>
 		<module>main-runner</module>

@@ -144,5 +144,49 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>enable-only-hello-agent-twice-mode</id>
+			<activation>
+				<property>
+					<name>env.STUDY_AGENT_RUN_MODE</name>
+					<value>only-hello-agent-twice</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<argLine>@{argLine} ${hello.agent.opt} ${hello.agent.opt}</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<configuration>
+							<arguments>
+								<argument>-Xms256m</argument>
+								<argument>-ea</argument>
+								<argument>-Duser.language=en</argument>
+								<argument>-Duser.country=US</argument>
+
+								<!--
+								<argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</argument>
+								-->
+
+								<argument>${hello.agent.opt}</argument>
+								<argument>${hello.agent.opt}</argument>
+
+								<argument>-classpath</argument>
+								<classpath/>
+
+								<argument>${exec.mainClass}</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

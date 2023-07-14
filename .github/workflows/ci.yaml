@@ -35,6 +35,10 @@ jobs:
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+      - name: test under hello agent twice
+        run: ./mvnw dependency:properties surefire:test
+        env:
+          STUDY_AGENT_RUN_MODE: only-hello-agent-twice
       - name: run Main without agents
         run: ./mvnw dependency:properties exec:exec -pl main-runner
       - name: run Main under hello and world agents
@@ -45,6 +49,10 @@ jobs:
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+      - name: run Main under hello agent twice
+        run: ./mvnw dependency:properties exec:exec -pl main-runner
+        env:
+          STUDY_AGENT_RUN_MODE: only-hello-agent-twice
 
       - name: setup Java 8
         uses: actions/setup-java@v3
@@ -61,6 +69,10 @@ jobs:
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+      - name: test under hello agent twice
+        run: ./mvnw dependency:properties surefire:test
+        env:
+          STUDY_AGENT_RUN_MODE: only-hello-agent-twice
       - name: run Main without agents
         run: ./mvnw dependency:properties exec:exec -pl main-runner
       - name: run Main under hello and world agents
@@ -71,6 +83,10 @@ jobs:
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+      - name: run Main under hello agent twice
+        run: ./mvnw dependency:properties exec:exec -pl main-runner
+        env:
+          STUDY_AGENT_RUN_MODE: only-hello-agent-twice
 
       - name: 'remove self maven install files(OS: *nix)'
         run: rm -rf $HOME/.m2/repository/io/foldright/study*

@@ -4,6 +4,7 @@ public enum StudyAgentMode {
     NO_AGENTS,
     HELLO_AND_WORLD_AGENTS,
     ONLY_HELLO_AGENT,
+    ONLY_HELLO_AGENT_TWICE,
 
     ;
 
@@ -16,6 +17,8 @@ public enum StudyAgentMode {
             return HELLO_AND_WORLD_AGENTS;
         } else if ("only-hello-agent".equals(value)) {
             return ONLY_HELLO_AGENT;
+        } else if ("only-hello-agent-twice".equals(value)) {
+            return ONLY_HELLO_AGENT_TWICE;
         } else {
             throw new IllegalStateException("Illegal value of env var(" + envVarName + "): " + value);
         }

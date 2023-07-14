@@ -80,6 +80,9 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   cu::head_line_echo test under hello agent
   STUDY_AGENT_RUN_MODE=only-hello-agent jvb::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
 
+  cu::head_line_echo test under hello agent twice
+  STUDY_AGENT_RUN_MODE=only-hello-agent-twice jvb::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+
   cu::head_line_echo run Main without agents
   jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
 
@@ -88,4 +91,7 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
 
   cu::head_line_echo run Main under hello agent
   STUDY_AGENT_RUN_MODE=only-hello-agent jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
+
+  cu::head_line_echo run Main under hello agent twice
+  STUDY_AGENT_RUN_MODE=only-hello-agent-twice jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
 done

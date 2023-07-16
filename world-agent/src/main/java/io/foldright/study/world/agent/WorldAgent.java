@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static io.foldright.study.agent.utils.Utils.isClassLoaded;
+import static io.foldright.study.agent.utils.Utils.logLoadedClasses;
 import static io.foldright.study.agent.utils.transform.ThreadPoolExecutorTransformlet.THREAD_POOL_EXECUTOR_CLASS_NAME;
 
 
@@ -20,6 +21,8 @@ public class WorldAgent {
 
     public static void premain(final String agentArgs, @NonNull final Instrumentation inst) {
         System.out.println("[" + NAME + "Agent] Enter premain!");
+
+        logLoadedClasses(NAME, inst);
 
         if (isClassLoaded(inst, THREAD_POOL_EXECUTOR_CLASS_NAME))
             throw new IllegalStateException("class " + THREAD_POOL_EXECUTOR_CLASS_NAME + " already loaded");

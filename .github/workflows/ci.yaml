@@ -35,6 +35,7 @@ jobs:
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+          STUDY_AGENT_ENABLE_CLASS_LOG: true
       - name: test under hello agent twice
         run: ./mvnw dependency:properties surefire:test
         env:
@@ -49,6 +50,7 @@ jobs:
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+          STUDY_AGENT_ENABLE_CLASS_LOG: true
       - name: run Main under hello agent twice
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
@@ -69,6 +71,7 @@ jobs:
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+          STUDY_AGENT_ENABLE_CLASS_LOG: true
       - name: test under hello agent twice
         run: ./mvnw dependency:properties surefire:test
         env:
@@ -83,6 +86,7 @@ jobs:
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
+          STUDY_AGENT_ENABLE_CLASS_LOG: true
       - name: run Main under hello agent twice
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:

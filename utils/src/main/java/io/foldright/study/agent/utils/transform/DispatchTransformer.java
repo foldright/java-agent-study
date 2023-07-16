@@ -44,7 +44,9 @@ public final class DispatchTransformer implements ClassFileTransformer {
         try {
             // Lambda has no class file, no need to transform, just return.
             if (classFile == null) return NO_TRANSFORM;
-            System.out.println("[" + name + "Transformer] try transform " + classFile);
+
+            if (System.getenv().containsKey("STUDY_AGENT_ENABLE_CLASS_LOG"))
+                System.out.println("[" + name + "Transformer] try transform " + classFile);
 
             final String className = classFileToName(classFile);
             final Transformlet tr = transformlets.get(className);

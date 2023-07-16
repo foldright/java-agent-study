@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static io.foldright.study.agent.utils.Utils.isClassLoaded;
+import static io.foldright.study.agent.utils.Utils.logLoadedClasses;
 import static io.foldright.study.agent.utils.transform.ThreadPoolExecutorTransformlet.THREAD_POOL_EXECUTOR_CLASS_NAME;
 
 
@@ -25,6 +26,8 @@ public class HelloAgent {
             throw new IllegalStateException("throw exception for jvm start failure test by setting HELLO_AGENT_THROW_EXCEPTION env var!");
         }
 
+        logLoadedClasses(NAME, inst);
+
         if (isClassLoaded(inst, THREAD_POOL_EXECUTOR_CLASS_NAME))
             throw new IllegalStateException("class " + THREAD_POOL_EXECUTOR_CLASS_NAME + " already loaded");
 
@@ -33,4 +36,5 @@ public class HelloAgent {
         );
         inst.addTransformer(new DispatchTransformer(NAME, transformlets));
     }
+
 }

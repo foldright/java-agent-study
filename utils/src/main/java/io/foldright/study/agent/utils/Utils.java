@@ -40,6 +40,14 @@ public class Utils {
     private static final ClassLoader NULL_CLASS_LOADER = doPrivileged((PrivilegedAction<ClassLoader>) () -> new ClassLoader() {
     });
 
+    public static void logLoadedClasses(String agentName, @NotNull Instrumentation inst) {
+        if (!System.getenv().containsKey("STUDY_AGENT_ENABLE_CLASS_LOG")) return;
+
+        for (Class<?> clazz : inst.getAllLoadedClasses()) {
+            System.out.println("[" + agentName + "Agent] Loaded class " + clazz.getName() + " by " + clazz.getClassLoader());
+        }
+    }
+
     public static String classFileToName(@NonNull final String classFile) {
         return classFile.replace('/', '.');
     }

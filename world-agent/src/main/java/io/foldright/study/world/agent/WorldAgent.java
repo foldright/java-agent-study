@@ -8,8 +8,8 @@ import java.lang.instrument.Instrumentation;
 import java.util.Collections;
 import java.util.List;
 
-import static io.foldright.study.agent.utils.transform.ThreadPoolExecutorTransformlet.THREAD_POOL_EXECUTOR_CLASS_NAME;
 import static io.foldright.study.agent.utils.Utils.isClassLoaded;
+import static io.foldright.study.agent.utils.transform.ThreadPoolExecutorTransformlet.THREAD_POOL_EXECUTOR_CLASS_NAME;
 
 
 /**

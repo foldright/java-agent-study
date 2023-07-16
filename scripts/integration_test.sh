@@ -67,6 +67,10 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   # just test without build
   cu::head_line_echo "test with Java $jdk_version: $JAVA_HOME"
 
+  ##############################
+  # run unit test
+  ##############################
+
   # skip default jdk, already tested above
   if [ "$jdk_version" != "$default_build_jdk_version" ]; then
     # just test without build
@@ -83,8 +87,20 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   cu::head_line_echo test under hello agent twice
   STUDY_AGENT_RUN_MODE=only-hello-agent-twice jvb::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
 
+  ##############################
+  # run main test
+  ##############################
+
   cu::head_line_echo run Main without agents
   jvb::mvn_cmd dependency:properties exec:exec -pl main-runner
+
+  cu::head_line_echo "test jvm should fail if throw exception in agent premain"
+  tmp_output_file="target/study_hello_agent_throw_exception_$$_$RANDOM.tmp"
+  STUDY_HELLO_AGENT_THROW_EXCEPTION= STUDY_AGENT_RUN_MODE=only-hello-agent jvb::mvn_cmd dependency:properties exec:exec -pl main-runner 2>&1 |
+    tee "$tmp_output_file" &&
+    cu::die "jvm should fail if throw exception in agent premain!"
+  cu::log_then_run grep "IllegalStateException.*throw exception for jvm start failure test by setting HELLO_AGENT_THROW_EXCEPTION env var!" "$tmp_output_file" ||
+    cu::die "should contains exception message!"
 
   cu::head_line_echo run Main under hello and world agents
   STUDY_AGENT_RUN_MODE=hello-and-world-agents jvb::mvn_cmd dependency:properties exec:exec -pl main-runner

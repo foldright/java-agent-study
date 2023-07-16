@@ -7,7 +7,7 @@ jobs:
   test:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 5
+    timeout-minutes: 10
     name: fast test on OS ${{ matrix.os }}
     strategy:
       matrix:

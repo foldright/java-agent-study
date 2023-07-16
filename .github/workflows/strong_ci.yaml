@@ -7,7 +7,7 @@ jobs:
   test:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     name: test by multiply java versions
 
     steps:

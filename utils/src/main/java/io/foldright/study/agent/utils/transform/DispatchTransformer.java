@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.foldright.study.agent.utils.Utils.classFileToName;
+import static io.foldright.study.agent.utils.Utils.logThrowable;
 
 
 public final class DispatchTransformer implements ClassFileTransformer {
@@ -53,8 +54,7 @@ public final class DispatchTransformer implements ClassFileTransformer {
             if (tr == null) return NO_TRANSFORM;
             return tr.transform(loader, classFile, classBeingRedefined, protectionDomain, classFileBuffer);
         } catch (Exception e) {
-            System.err.println(e);
-            e.printStackTrace();
+            logThrowable(e);
             throw new IllegalStateException(e);
         }
     }

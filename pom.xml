@@ -65,18 +65,18 @@
 		<!-- need argLine to use `@{argLine}`(e.g. `maven-surefire-plugin`) -->
 		<argLine/>
 
-		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.8.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
-		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
+		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
-		<kotlin.version>1.9.0</kotlin.version>
+		<kotlin.version>1.9.22</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 
-		<slf4j.version>2.0.7</slf4j.version>
+		<slf4j.version>2.0.9</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.3</junit5.version>
-		<kotest.version>5.6.2</kotest.version>
+		<junit5.version>5.10.1</junit5.version>
+		<kotest.version>5.8.0</kotest.version>
 	</properties>
 
 	<dependencies>
@@ -173,7 +173,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.29.2-GA</version>
+				<version>3.30.2-GA</version>
 				<optional>true</optional>
 			</dependency>
 
@@ -320,7 +320,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.3.1</version>
+					<version>3.3.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -342,7 +342,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.11.0</version>
+					<version>3.12.1</version>
 					<configuration>
 						<!-- https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#compilerArgs -->
 						<compilerArgs>
@@ -354,7 +354,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.2.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -365,12 +365,12 @@
 					<!-- https://github.com/moditect/moditect -->
 					<groupId>org.moditect</groupId>
 					<artifactId>moditect-maven-plugin</artifactId>
-					<version>1.0.0.Final</version>
+					<version>1.1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.5.1</version>
 					<configuration>
 						<shadeSourcesContent>true</shadeSourcesContent>
 						<dependencyReducedPomLocation>
@@ -386,7 +386,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.6.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -411,22 +411,22 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.1</version>
 				</plugin>
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.7.3.5</version>
+					<version>4.8.2.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.10</version>
+					<version>0.8.11</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.6.1</version>
 				</plugin>
 				<plugin>
 					<!--
@@ -435,7 +435,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.1.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

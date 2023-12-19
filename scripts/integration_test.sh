@@ -19,7 +19,6 @@ readonly JDK_VERSIONS=(
   8
   11
   "$default_build_jdk_version"
-  20
   21
 )
 
@@ -54,8 +53,7 @@ mvu::mvn_cmd clean install
 # about CI env var
 #   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
 if [ "${CI:-}" = true ]; then
-  CI_MORE_BEGIN_OPTS=jacoco:prepare-agent
-  CI_MORE_END_OPTS=jacoco:report
+  CI_MORE_BEGIN_OPTS=jacoco:prepare-agent CI_MORE_END_OPTS=jacoco:report
 fi
 
 for jdk_version in "${JDK_VERSIONS[@]}"; do

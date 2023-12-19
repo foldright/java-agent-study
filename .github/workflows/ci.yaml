@@ -8,7 +8,7 @@ jobs:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
-    name: fast test on OS ${{ matrix.os }}
+    name: fast CI on OS ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
@@ -18,85 +18,85 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: setup Java 17
+      - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: temurin
           # only first java setup need enable cache
           cache: maven
-      - name: build and test with Java 17 without agents
+      - name: Build and test with Java 17 without agents
         run: ./mvnw -V --no-transfer-progress clean install
-      - name: test under hello and world agents
+      - name: Test under hello and world agents
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: hello-and-world-agents
-      - name: test under hello agent
+      - name: Test under hello agent
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
           STUDY_AGENT_ENABLE_CLASS_LOG: true
-      - name: test under hello agent twice
+      - name: Test under hello agent twice
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent-twice
-      - name: run Main without agents
+      - name: Run Main without agents
         run: ./mvnw dependency:properties exec:exec -pl main-runner
-      - name: run Main under hello and world agents
+      - name: Run Main under hello and world agents
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: hello-and-world-agents
-      - name: run Main under hello agent
+      - name: Run Main under hello agent
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
           STUDY_AGENT_ENABLE_CLASS_LOG: true
-      - name: run Main under hello agent twice
+      - name: Run Main under hello agent twice
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent-twice
 
-      - name: setup Java 8
+      - name: Setup Java 8
         uses: actions/setup-java@v3
         with:
           java-version: 8
           distribution: zulu
-      - name: test with Java 8 without agents
+      - name: Test with Java 8 without agents
         run: ./mvnw -V --no-transfer-progress dependency:properties surefire:test
-      - name: test under hello and world agents
+      - name: Test under hello and world agents
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: hello-and-world-agents
-      - name: test under hello agent
+      - name: Test under hello agent
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
           STUDY_AGENT_ENABLE_CLASS_LOG: true
-      - name: test under hello agent twice
+      - name: Test under hello agent twice
         run: ./mvnw dependency:properties surefire:test
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent-twice
-      - name: run Main without agents
+      - name: Run Main without agents
         run: ./mvnw dependency:properties exec:exec -pl main-runner
-      - name: run Main under hello and world agents
+      - name: Run Main under hello and world agents
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: hello-and-world-agents
-      - name: run Main under hello agent
+      - name: Run Main under hello agent
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent
           STUDY_AGENT_ENABLE_CLASS_LOG: true
-      - name: run Main under hello agent twice
+      - name: Run Main under hello agent twice
         run: ./mvnw dependency:properties exec:exec -pl main-runner
         env:
           STUDY_AGENT_RUN_MODE: only-hello-agent-twice
 
-      - name: 'remove self maven install files(OS: *nix)'
+      - name: 'Remove self maven install files(OS: *nix)'
         run: rm -rf $HOME/.m2/repository/io/foldright/study*
         # https://docs.github.com/en/actions/learn-github-actions/expressions
         # https://docs.github.com/en/actions/learn-github-actions/variables#detecting-the-operating-system
         if: runner.os != 'Windows'
-      - name: 'remove self maven install files(OS: Windows)'
+      - name: 'Remove self maven install files(OS: Windows)'
         run: Remove-Item -Recurse -Force $home/.m2/repository/io/foldright/study*
         if: runner.os == 'Windows'

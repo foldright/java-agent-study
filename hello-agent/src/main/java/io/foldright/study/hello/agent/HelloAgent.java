@@ -23,7 +23,7 @@ public class HelloAgent {
         System.out.println("[" + NAME + "Agent] Enter premain!");
 
         if (System.getenv().containsKey("STUDY_HELLO_AGENT_THROW_EXCEPTION")) {
-            throw new IllegalStateException("throw exception for jvm start failure test by setting HELLO_AGENT_THROW_EXCEPTION env var!");
+            throw new IllegalStateException("throw exception for jvm start failure test by setting STUDY_HELLO_AGENT_THROW_EXCEPTION env var!");
         }
 
         logLoadedClasses(NAME, inst);

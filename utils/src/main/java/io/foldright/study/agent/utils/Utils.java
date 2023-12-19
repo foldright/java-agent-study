@@ -30,11 +30,18 @@ public class Utils {
 
     @NonNull
     private static Map<String, Map<ClassLoader, Set<Class<?>>>> getLoadedClasses(@NonNull Instrumentation inst) {
-        return Arrays.stream((Class<?>[]) inst.getAllLoadedClasses())
-                .collect(groupingBy(Class::getName, groupingBy(clazz -> {
-                    ClassLoader classLoader = clazz.getClassLoader();
-                    return classLoader == null ? NULL_CLASS_LOADER : classLoader;
-                }, toSet())));
+        return Arrays.stream((Class<?>[]) inst.getAllLoadedClasses()).collect(
+                groupingBy(
+                        Class::getName,
+                        groupingBy(
+                                clazz -> {
+                                    ClassLoader classLoader = clazz.getClassLoader();
+                                    return classLoader == null ? NULL_CLASS_LOADER : classLoader;
+                                },
+                                toSet()
+                        )
+                )
+        );
     }
 
     @SuppressWarnings("removal")

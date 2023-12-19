@@ -98,7 +98,7 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
     mvu::mvn_cmd dependency:properties exec:exec -pl main-runner 2>&1 |
     tee "$tmp_output_file" &&
     cu::die "jvm should fail if throw exception in agent premain!"
-  cu::log_then_run grep "IllegalStateException.*throw exception for jvm start failure test by setting HELLO_AGENT_THROW_EXCEPTION env var!" "$tmp_output_file" ||
+  cu::log_then_run grep "IllegalStateException.*throw exception for jvm start failure test by setting STUDY_HELLO_AGENT_THROW_EXCEPTION env var!" "$tmp_output_file" ||
     cu::die "should contains exception message!"
 
   cu::head_line_echo run Main under hello and world agents

@@ -11,7 +11,7 @@ public enum StudyAgentMode {
     public static StudyAgentMode getStudyAgentMode() {
         final String envVarName = "STUDY_AGENT_RUN_MODE";
         final String value = System.getenv(envVarName);
-        if (value == null || "".equals(value)) {
+        if (value == null) {
             return NO_AGENTS;
         } else if ("hello-and-world-agents".equals(value)) {
             return HELLO_AND_WORLD_AGENTS;

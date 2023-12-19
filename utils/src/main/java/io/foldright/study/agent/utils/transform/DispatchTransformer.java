@@ -52,8 +52,8 @@ public final class DispatchTransformer implements ClassFileTransformer {
             final String className = classFileToName(classFile);
             final Transformlet tr = transformlets.get(className);
             if (tr == null) return NO_TRANSFORM;
-            return tr.transform(loader, classFile, classBeingRedefined, protectionDomain, classFileBuffer);
-        } catch (Exception e) {
+            return tr.transform(loader, className, classBeingRedefined, protectionDomain, classFileBuffer);
+        } catch (Throwable e) {
             logThrowable(e);
             throw new IllegalStateException(e);
         }

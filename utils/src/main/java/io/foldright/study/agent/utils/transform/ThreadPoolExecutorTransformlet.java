@@ -19,6 +19,8 @@ public class ThreadPoolExecutorTransformlet implements Transformlet {
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classFileBuffer) throws Exception {
+        log("transforming " + className);
+
         final ClassInfo classInfo = new ClassInfo(THREAD_POOL_EXECUTOR_CLASS_NAME, classFileBuffer, loader);
 
         // HACK toString method

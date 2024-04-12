@@ -72,7 +72,7 @@
 		<kotlin.version>1.9.23</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 
-		<slf4j.version>2.0.12</slf4j.version>
+		<slf4j.version>2.0.13</slf4j.version>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.10.2</junit5.version>

@@ -1,12 +1,17 @@
 #!/bin/bash
 set -eEuo pipefail
-cd "$(dirname "$(readlink -f "$0")")"
+# the canonical path of this script
+SELF_PATH=$(realpath -- "$0")
+readonly SELF_PATH SELF_DIR=${SELF_PATH%/*}
 
-BASH_BUDDY_ROOT="$(readlink -f bash-buddy)"
-readonly BASH_BUDDY_ROOT
+readonly BASH_BUDDY_ROOT="$SELF_DIR/bash-buddy"
+# shellcheck disable=SC1091
 source "$BASH_BUDDY_ROOT/lib/trap_error_info.sh"
+# shellcheck disable=SC1091
 source "$BASH_BUDDY_ROOT/lib/common_utils.sh"
+# shellcheck disable=SC1091
 source "$BASH_BUDDY_ROOT/lib/java_utils.sh"
+# shellcheck disable=SC1091
 source "$BASH_BUDDY_ROOT/lib/maven_utils.sh"
 
 ################################################################################
@@ -20,6 +25,7 @@ readonly JDK_VERSIONS=(
   11
   "$default_build_jdk_version"
   21
+  23
 )
 
 # here use `install` and `-D performRelease` intended
@@ -33,9 +39,12 @@ readonly MVU_MVN_OPTS=(
   "${MVU_DEFAULT_MVN_OPTS[@]}"
   -DperformRelease -P'!gen-sign'
   ${CI_MORE_MVN_OPTS:+${CI_MORE_MVN_OPTS}}
+  dependency:properties
 )
 
-cd ..
+# cd to the project root directory
+readonly PROJECT_ROOT=${SELF_DIR%/*}
+cd "$PROJECT_ROOT"
 
 ########################################
 # build and test by default version jdk
@@ -50,11 +59,11 @@ mvu::mvn_cmd clean install
 # test by multiply version jdks
 ########################################
 
+SUREFIRE_TEST_GOAL=(surefire:test)
 # about CI env var
 #   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-if [ "${CI:-}" = true ]; then
-  CI_MORE_BEGIN_OPTS=jacoco:prepare-agent CI_MORE_END_OPTS=jacoco:report
-fi
+[ "${CI:-}" = true ] && SUREFIRE_TEST_GOAL=(jacoco:prepare-agent "${SUREFIRE_TEST_GOAL[@]}" jacoco:report)
+readonly SUREFIRE_TEST_GOAL
 
 for jdk_version in "${JDK_VERSIONS[@]}"; do
   jvu::switch_to_jdk "$jdk_version"
@@ -70,32 +79,32 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   if [ "$jdk_version" != "$default_build_jdk_version" ]; then
     # just test without build
     cu::head_line_echo "test without agents: $JAVA_HOME"
-    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+    mvu::mvn_cmd "${SUREFIRE_TEST_GOAL[@]}"
   fi
 
   cu::head_line_echo test under hello and world agents
   STUDY_AGENT_RUN_MODE=hello-and-world-agents \
-    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+    mvu::mvn_cmd "${SUREFIRE_TEST_GOAL[@]}"
 
   cu::head_line_echo test under hello agent
   STUDY_AGENT_RUN_MODE=only-hello-agent STUDY_AGENT_ENABLE_CLASS_LOG=true \
-    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+    mvu::mvn_cmd "${SUREFIRE_TEST_GOAL[@]}"
 
   cu::head_line_echo test under hello agent twice
   STUDY_AGENT_RUN_MODE=only-hello-agent-twice \
-    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} dependency:properties surefire:test ${CI_MORE_END_OPTS:-}
+    mvu::mvn_cmd "${SUREFIRE_TEST_GOAL[@]}"
 
   ##############################
   # run main test
   ##############################
 
   cu::head_line_echo run Main without agents
-  mvu::mvn_cmd dependency:properties exec:exec -pl main-runner
+  mvu::mvn_cmd exec:exec -pl main-runner
 
   cu::head_line_echo "test jvm should fail if throw exception in agent premain"
   tmp_output_file="target/study_hello_agent_throw_exception_$$_$RANDOM.tmp"
   STUDY_AGENT_RUN_MODE=only-hello-agent STUDY_HELLO_AGENT_THROW_EXCEPTION=true \
-    mvu::mvn_cmd dependency:properties exec:exec -pl main-runner 2>&1 |
+    mvu::mvn_cmd exec:exec -pl main-runner 2>&1 |
     tee "$tmp_output_file" &&
     cu::die "jvm should fail if throw exception in agent premain!"
   cu::log_then_run grep "IllegalStateException.*throw exception for jvm start failure test by setting STUDY_HELLO_AGENT_THROW_EXCEPTION env var!" "$tmp_output_file" ||
@@ -103,13 +112,13 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
 
   cu::head_line_echo run Main under hello and world agents
   STUDY_AGENT_RUN_MODE=hello-and-world-agents \
-    mvu::mvn_cmd dependency:properties exec:exec -pl main-runner
+    mvu::mvn_cmd exec:exec -pl main-runner
 
   cu::head_line_echo run Main under hello agent
   STUDY_AGENT_RUN_MODE=only-hello-agent STUDY_AGENT_ENABLE_CLASS_LOG=true \
-    mvu::mvn_cmd dependency:properties exec:exec -pl main-runner
+    mvu::mvn_cmd exec:exec -pl main-runner
 
   cu::head_line_echo run Main under hello agent twice
   STUDY_AGENT_RUN_MODE=only-hello-agent-twice \
-    mvu::mvn_cmd dependency:properties exec:exec -pl main-runner
+    mvu::mvn_cmd exec:exec -pl main-runner
 done
